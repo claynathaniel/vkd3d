@@ -2,6 +2,8 @@ project(vkd3d)
 cmake_minimum_required(VERSION 3.25)
 
 include(CheckCCompilerFlag)
+include(CheckIncludeFile)
+
 
 set(CMAKE_C_STANDARD 99 )
 
@@ -109,3 +111,15 @@ if(HAS_NO_UNDEFINED)
 elseif (NOT HAS_NO_UNDEFINED)
     message(SEND_ERROR "no undefined is required")
 endif()
+
+
+
+check_include_file("dlfcn.h" HAVE_DLFCN_H)
+check_include_file("vulkan/vulkan.h" HAVE_VULKAN_H)
+check_include_file("xcb/xcb.h" HAVE_XCB_XCB_H)
+check_include_file("pthread.h" HAVE_PTHREAD_H)
+check_include_file("vulkan/spirv.h" HAVE_VULKAN_SPIRV_H)
+check_include_file("vulkan/unified1/GLSL.std.450.h" HAVE_VULKAN_UNIFIED1_GLSL_STD_450_H)
+check_include_file("spirv/unified1/GLSL.std.450.h" HAVE_SPIRV_UNIFIED1_SPIRV_H)
+check_include_file("spirv/unified1/spirv.h" HAVE_VULKAN_UNIFIED1_SPIRV_H)
+
