@@ -3,15 +3,17 @@ cmake_minimum_required(VERSION 3.25)
 
 include(CheckCCompilerFlag)
 include(CheckIncludeFile)
+include(FindVulkan)
 
-
-set(CMAKE_C_STANDARD 99 )
+set_property(target vkd3d PROPERTY C_STANDARD 11 )
 
 find_program( CMAKE_WIDL NAMES widl )
 
 if( NOT CMAKE_WIDL )
     message( FATAL_ERROR "widl not found" )
 endif()
+
+find_package(Vulkan REQUIRED)
 
 find_program(CMAKE_FLEX NAMES flex)
 if(NOT CMAKE_FLEX)
@@ -47,11 +49,11 @@ elseif (NOT HAS_PIPE)
     message(SEND_ERROR "pipe is required")
 endif()
 
-check_c_compiler_flag(-std=c99 HAS_STD_C99)
-if(HAS_STD_C99)
-    add_compile_options(-std=c99)
-elseif (NOT HAS_STD_C99)
-    message(SEND_ERROR "std c99 is required")
+check_c_compiler_flag(-std=c11 HAS_STD_C11)
+if(HAS_STD_C11)
+    add_compile_options(-std=c11)
+elseif (NOT HAS_STD_C11)
+    message(SEND_ERROR "std c11 is required")
 endif()
 
 check_c_compiler_flag(-fvisibility=hidden HAS_VISIBILITY_HIDDEN)
@@ -59,6 +61,13 @@ if(HAS_VISIBILITY_HIDDEN)
     add_compile_options(-fvisibility=hidden)
 elseif (NOT HAS_VISIBILITY_HIDDEN)
     message(SEND_ERROR "visibility hidden is required")
+endif()
+
+check_c_compiler_flag(-g   HAS_G)
+if(HAS_G)
+    add_compile_options(-g)
+elseif (NOT HAS_G)
+    message(SEND_ERROR "g is required")
 endif()
 
 check_c_compiler_flag(-Wdeclaration-after-statement HAS_DECLARATION_AFTER_STATEMENT)
@@ -117,6 +126,7 @@ elseif (NOT HAS_NO_UNDEFINED)
     message(SEND_ERROR "no undefined is required")
 endif()
 
+# check for include files
 check_include_file("stdio.h" HAVE_STDIO_H)
 check_include_file("stdlib.h" HAVE_STDLIB_H)
 check_include_file("string.h" HAVE_STRING_H)
